@@ -1,0 +1,38 @@
+{
+  "name": "lessteps",
+  "version": "0.1.2",
+  "description": "lessteps",
+  "main": "index.js",
+  "scripts": {
+    "patch-release": "npm version patch && npm publish && git push --follow-tags",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rafoli/lessteps.git"
+  },
+  "keywords": [
+    "lessteps",
+    "cli",
+    "liferay"
+  ],
+  "author": "Rafael Oliveira <rafael.oliveira@liferay.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rafoli/lessteps/issues"
+  },
+  "homepage": "https://github.com/rafoli/lessteps#readme",
+  "dependencies": {
+    "async": "^2.1.2",
+    "child_process": "^1.0.2",
+    "colors": "^1.1.2",
+    "commander": "^2.9.0",
+    "properties-parser": "^0.3.1",
+    "rimraf": "^2.5.4",
+    "shelljs": "^0.7.4"
+  },
+  "bin": {
+    "lessteps": "index.js",
+    "les": "index.js"
+  }
+}
