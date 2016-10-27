@@ -5,7 +5,7 @@ Some useful commands for Liferay 7.0/DXP developers
 ## Install
 
 ```
-$ npm install --global lessteps-cli
+$ npm install -g lessteps
 ```
 
 
