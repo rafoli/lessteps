@@ -1,8 +1,6 @@
+# lessteps [![Build Status](https://semaphoreci.com/api/v1/rafoli/lessteps/branches/master/badge.svg)](https://semaphoreci.com/rafoli/lessteps)
 
-> Some useful commands for Liferay 7.0/DXP developers
-
-[![Build Status](https://semaphoreci.com/api/v1/rafoli/lessteps/branches/master/badge.svg)](https://semaphoreci.com/rafoli/lessteps)
-
+Some useful commands for Liferay 7.0/DXP developers
 
 ## Install
 
