@@ -6,8 +6,9 @@
  * Module dependencies.
  */
 
-const h = require('./helpers');
-const tasks = require('./tasks');
+const common = require('./tasks/common-tasks');
+const liferay = require('./tasks/liferay-tasks');
+const sybase = require('./tasks/sybase-tasks');
 
 const async = require('async');
 const colors = require('colors');
@@ -20,23 +21,43 @@ const program = require('commander');
 const initCommand = function(env, options) {
     async.auto({
         clean_liferay_workspace: function(cb) {
-            tasks.cleanLiferayWorkspace(cb);
+            liferay.cleanLiferayWorkspace(cb);
         },
         init_bundle: ['clean_liferay_workspace', function(results, cb) {
-            tasks.initBundle(cb);
+            liferay.initBundle(cb);
         }],
         apply_license: ['init_bundle', function(results, cb) {
-            tasks.applyLicense(cb);
+            liferay.applyLicense(cb);
         }],
         patching_tool_path: ['apply_license', function(results, cb) {
-            tasks.downloadFileTo('gradle.properties', 'liferay.patchingtool.bundle.url', '~/.liferay/patching-tool', cb);
+            common.downloadFileTo('gradle.properties', 'liferay.patchingtool.bundle.url', '~/.liferay/patching-tool', cb);
         }],
         fix_pack_path: ['patching_tool_path', function(results, cb) {
-            tasks.downloadFileTo('gradle.properties', 'liferay.fixpack.bundle.url', '~/.liferay/fix-packs', cb);
+            common.downloadFileTo('gradle.properties', 'liferay.fixpack.bundle.url', '~/.liferay/fix-packs', cb);
         }],
         applyPatch: ['fix_pack_path', function(results, cb) {
-            tasks.applyPatch(results.patching_tool_path, results.fix_pack_path, cb);
+            liferay.applyPatch(results.patching_tool_path, results.fix_pack_path, cb);
         }]
+    });
+}
+
+const initdbCommand = function(env, options) {
+    async.auto({
+        stop_sybase: function(cb) {
+            sybase.stopSybase(cb);
+        },
+        remove_sybase: ['stop_sybase', function(results, cb) {
+            sybase.removeSybase(cb);
+        }],
+        start_sybase: ['remove_sybase', function(results, cb) {
+            sybase.startSybase(cb);
+        }],
+        sybase_script: ['start_sybase', function(results, cb) {
+            common.downloadFileTo('gradle.properties', 'liferay.database.sybase.script.url', '~/.liferay/scripts', cb);
+        }],
+        remove_sybase: ['download_sybase_script', function(results, cb) {
+            sybase.createLPortal('~/.liferay/scripts/' + results.sybase_script, cb);
+        }
     });
 }
 
@@ -46,18 +67,18 @@ const initCommand = function(env, options) {
 
 // Header
 program
-    .version('0.1.2')
-    .option('-p, --profile', 'Choose config profile')
+    .version('0.1.2');
 
-// Init
+// init
 program
-    .command('init')
-    .description('Create Liferay\'s bundle')
-    .action(initCommand);
+    .command('init [profile]')
+    .description('Create Liferay\'s bundle (default profile - dev)')
+    .action(initCommand); 
 
+// initdb
 program
-    .command('initdb')
-    .description('Init a DB instance');
+    .command('initdb [type]')
+    .description('Init a DB instance', initdbCommand)
 
 // Title
 console.log('┬  ┌─┐┌─┐'.cyan + '┌─┐' + '┌┬┐┌─┐┌─┐┌─┐'.red);
