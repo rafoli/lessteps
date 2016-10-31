@@ -20,16 +20,17 @@ const removeSybase = function(cb) {
 const startSybase = function(cb) {
     log.title("Starting a new SyBase container...");
 
-    async.series({
+    async.series([
         function(callback) {
-            shell.run('docker run -i -t --name sybase-container -p 5000:5000 -h dksybase -d ifnazar/sybase_15_7 bash /sybase/start', callback);
+            shell.run('docker run -i --name sybase-container -p 5000:5000 -h dksybase -d ifnazar/sybase_15_7 bash /sybase/start', callback);
         },
         function(callback) {
+            log.info("Waiting for DB instance be ready...");
             setTimeout(function() {
                 callback();
             }, 60000);
         }
-    }, cb);
+    ], cb);
 }
 
 const createLPortal = function(scriptPath, cb) {
@@ -37,14 +38,14 @@ const createLPortal = function(scriptPath, cb) {
 
     let sqlFile = '/sybase/toRun.sql'
 
-    async.series({
+    async.series([
         function(callback) {
             shell.run('docker cp ' + scriptPath + ' sybase-container:' + sqlFile, callback);
         },
         function(callback) {
-            shell.run('docker exec -i -t sybase-container bash /sybase/isql -i' + sqlFile, callback);
+            shell.run('docker exec -i sybase-container bash /sybase/isql "-i' + sqlFile + '"', callback);
         }
-    }, cb);
+    ], cb);
 
 }
 

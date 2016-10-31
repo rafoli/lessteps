@@ -86,6 +86,5 @@ module.exports = {
     cleanLiferayWorkspace,
     initBundle,
     applyLicense,
-    downloadFileTo,
     applyPatch
 }

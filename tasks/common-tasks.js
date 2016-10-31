@@ -21,3 +21,7 @@ const downloadFileTo = function(propertiesFile, key, toDir, cb) {
         });
     });
 }
+
+module.exports = {
+    downloadFileTo
+}

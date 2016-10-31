@@ -55,9 +55,9 @@ const initdbCommand = function(env, options) {
         sybase_script: ['start_sybase', function(results, cb) {
             common.downloadFileTo('gradle.properties', 'liferay.database.sybase.script.url', '~/.liferay/scripts', cb);
         }],
-        remove_sybase: ['download_sybase_script', function(results, cb) {
-            sybase.createLPortal('~/.liferay/scripts/' + results.sybase_script, cb);
-        }
+        create_lportal: ['sybase_script', function(results, cb) {
+            sybase.createLPortal(results.sybase_script, cb);
+        }]
     });
 }
 
@@ -71,14 +71,15 @@ program
 
 // init
 program
-    .command('init [profile]')
+    .command('init')
     .description('Create Liferay\'s bundle (default profile - dev)')
     .action(initCommand); 
 
 // initdb
 program
-    .command('initdb [type]')
-    .description('Init a DB instance', initdbCommand)
+    .command('initdb')
+    .description('Init a DB instance')
+    .action(initdbCommand);
 
 // Title
 console.log('┬  ┌─┐┌─┐'.cyan + '┌─┐' + '┌┬┐┌─┐┌─┐┌─┐'.red);
