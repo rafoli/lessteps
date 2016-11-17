@@ -9,12 +9,12 @@ const async = require('async');
 
 const stopSybase = function(cb) {
     log.title("Stopping SyBase container...");
-    shell.run('docker stop sybase-container', cb);
+    shell.run('docker stop sybase-container || true', cb);
 }
 
 const removeSybase = function(cb) {
     log.title("Removing SyBase container...");
-    shell.run('docker rm sybase-container', cb);
+    shell.run('docker rm sybase-container || true', cb);
 }
 
 const startSybase = function(cb) {
