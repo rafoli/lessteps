@@ -67,7 +67,7 @@ const initdbCommand = function(env, options) {
 
 // Header
 program
-    .version('0.1.4');
+    .version('0.1.5');
 
 // init
 program
