@@ -36,10 +36,21 @@ const cleanLiferayWorkspace = function(cb) {
     ], cb);
 }
 
-const initBundle = function(cb) {
-    log.title("Calling initBundle and deploy...");
 
-    shell.run('./gradlew initBundle deploy', cb);
+const getGradleCommand = function () {
+    var localCommand = "./gradlew";
+    if (fs.existsSync(localCommand)) {
+        return localCommand
+    } else {
+        return "gradle"
+    }
+};
+
+const initBundle = function (cb) {
+    log.title("Calling initBundle ...");
+
+    var gradleCommand = getGradleCommand();
+    shell.run(gradleCommand + ' initBundle ', cb);
 }
 
 const applyLicense = function(cb) {
