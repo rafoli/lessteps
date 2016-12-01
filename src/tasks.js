@@ -38,7 +38,7 @@ const cleanLiferayWorkspace = function(cb) {
 const initBundle = function(cb) {
     h.logTitle("Calling initBundle and deploy...");
 
-    h.run('./gradlew initBundle deploy', cb);
+    h.run('gradle initBundle deploy', cb);
 }
 
 const applyLicense = function(cb) {
