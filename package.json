@@ -1,6 +1,6 @@
 {
   "name": "lessteps",
-  "version": "0.1.7",
+  "version": "0.2.0",
   "description": "lessteps",
   "main": "lib/index.js",
   "scripts": {
@@ -30,14 +30,17 @@
     "commander": "^2.9.0",
     "properties-parser": "^0.3.1",
     "rimraf": "^2.5.4",
-    "shelljs": "^0.7.4"
+    "shelljs": "^0.7.4",
+    "sprintf-js": "^1.0.3"
   },
   "bin": {
     "lessteps": "lib/index.js",
     "les": "lib/index.js"
   },
   "babel": {
-    "presets": ["es2015"]
+    "presets": [
+      "es2015"
+    ]
   },
   "devDependencies": {
     "babel-cli": "^6.18.0",

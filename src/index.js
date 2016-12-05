@@ -7,8 +7,10 @@
  */
 
 const common = require('./tasks/common-tasks');
+const git = require('./tasks/git-tasks');
 const liferay = require('./tasks/liferay-tasks');
 const sybase = require('./tasks/sybase-tasks');
+const test = require('./tasks/test-tasks');
 
 const async = require('async');
 const colors = require('colors');
@@ -61,25 +63,52 @@ const initdbCommand = function(env, options) {
     });
 }
 
+
+
+const infoCommand = function(options) {
+    if (options.status)
+        git.stats();
+}
+
+const unitTestCommand = function(options) {
+    test.unitTest();
+}
+
+
+
+
 // ==============
 // Program definitions
 // ==============
 
 // Header
 program
-    .version('0.1.7');
+    .version('0.2.0');
 
 // init
 program
     .command('init')
     .description('Create Liferay\'s bundle (default profile - dev)')
-    .action(initCommand); 
+    .action(initCommand);
 
 // initdb
 program
     .command('initdb')
     .description('Init a DB instance')
     .action(initdbCommand);
+
+// git
+program
+    .command('git')
+    .description('Git commands')
+    .option('-s, --status', 'Projects status')
+    .action(infoCommand);
+
+// unitTest
+program
+    .command('unitTest')
+    .description('Git commands')
+    .action(unitTestCommand);
 
 // Title
 console.log('┬  ┌─┐┌─┐'.cyan + '┌─┐' + '┌┬┐┌─┐┌─┐┌─┐'.red);
