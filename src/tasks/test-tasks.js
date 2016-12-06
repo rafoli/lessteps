@@ -52,7 +52,7 @@ const coverage = function() {
         let projectName = path.basename(projectDir);
         let reportFile = `./${projectDir}/build/reports/jacoco/test/html/index.html`;
 
-        //shell.run(`cd ${projectDir} && gradle clean test jacocoTestReport`, null, { sync: true });
+        shell.run(`cd ${projectDir} && gradle clean test jacocoTestReport`, null, { sync: true });
 
         console.log(reportFile)
 
