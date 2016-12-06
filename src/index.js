@@ -63,27 +63,38 @@ const initdbCommand = function(env, options) {
     });
 }
 
-
-
 const infoCommand = function(options) {
     if (options.status)
         git.stats();
 }
 
 const unitTestCommand = function(options) {
-    test.unitTest();
+    if (options.unitTest)
+        test.unitTest();
+
+    if (options.functionalTest)
+        test.functionalTest();
+
+    if (options.sanityTest)
+        test.sanityTest();
+
+    if (options.functionalTest)
+        test.functionalTest();
+
+    if (options.coverage)
+        test.coverage();
 }
 
 
 
 
-// ==============
+// ===================
 // Program definitions
-// ==============
+// ===================
 
 // Header
 program
-    .version('0.2.0');
+    .version('0.2.1');
 
 // init
 program
@@ -104,10 +115,15 @@ program
     .option('-s, --status', 'Projects status')
     .action(infoCommand);
 
-// unitTest
+// test
 program
-    .command('unitTest')
+    .command('test')
     .description('Git commands')
+    .option('-u, --unitTest', 'Run unitTest')
+    .option('-f, --functionalTest', 'Run functionalTest')
+    .option('-s, --sanityTest', 'Run sanityTest')
+    .option('-i, --integrationTest', 'Run integrationTest')
+    .option('-c, --coverage', 'Run test coverage')
     .action(unitTestCommand);
 
 // Title
