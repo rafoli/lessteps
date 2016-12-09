@@ -56,7 +56,7 @@ const initdbCommand = function(env, options) {
             sybase.startSybase(cb);
         }],
         sybase_script: ['start_sybase', function(results, cb) {
-            common.downloadFileTo('gradle.properties', 'liferay.database.sybase.script.url', '~/.liferay/scripts', cb);
+            common.downloadUrlTo('https://raw.githubusercontent.com/rafoli/lessteps/master/src/tasks/sybase-lportal.sql', '~/.liferay/scripts', cb);
         }],
         create_lportal: ['sybase_script', function(results, cb) {
             sybase.createLPortal(results.sybase_script, cb);
@@ -113,7 +113,7 @@ const unitTestCommand = function(options) {
 
 // Header
 program
-    .version('0.2.5');
+    .version('0.2.6');
 
 // init
 program

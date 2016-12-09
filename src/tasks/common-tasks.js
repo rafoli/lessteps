@@ -17,11 +17,20 @@ const downloadFileTo = function(propertiesFile, key, toDir, cb) {
         let fileUrl = data[key];
         shell.run('wget -P ' + toDir + ' -N ' + fileUrl, function() {
             let fileName = path.basename(fileUrl);
-            cb(null, (toDir + '/' + fileName ));
+            cb(null, (toDir + '/' + fileName));
         });
     });
 }
 
+const downloadUrlTo = function(fileUrl, toDir, cb) {
+    log.title("Downloading url...");
+    shell.run('wget -P ' + toDir + ' -N ' + fileUrl, function() {
+        let fileName = path.basename(fileUrl);
+        cb(null, (toDir + '/' + fileName));
+    });
+}
+
 module.exports = {
-    downloadFileTo
+    downloadFileTo,
+    downloadUrlTo
 }
