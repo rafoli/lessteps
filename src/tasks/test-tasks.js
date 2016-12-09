@@ -52,7 +52,7 @@ const coverage = function() {
         let projectName = path.basename(projectDir);
         let reportFile = `./${projectDir}/build/reports/jacoco/test/html/index.html`;
 
-        shell.run(`cd ${projectDir} && gradle clean test jacocoTestReport`, null, { sync: true });
+        //shell.run(`cd ${projectDir} && gradle clean test jacocoTestReport`, null, { sync: true });
 
         console.log(reportFile)
 
@@ -82,7 +82,7 @@ const coverage = function() {
         var red = '\u001b[41m \u001b[0m';
 
         var bar = new ProgressBar({
-            schema: '[:bar.gradient(red,cyan)] :percent   ==>   :title',
+            schema: '|:bar.gradient(red,cyan)| :percent => :title ',
             width: 20,
             total: 100,
         });

@@ -65,7 +65,10 @@ const initdbCommand = function(env, options) {
 
 const infoCommand = function(options) {
     if (options.status)
-        git.stats();
+        git.status();
+
+    if (options.pull)
+        git.pull();
 }
 
 const unitTestCommand = function(options) {
@@ -113,6 +116,7 @@ program
     .command('git')
     .description('Git commands')
     .option('-s, --status', 'Projects status')
+    .option('-p, --pull', 'Projects status')
     .action(infoCommand);
 
 // test

@@ -13,10 +13,12 @@ const run = function(command, cb, options) {
         let execOpts = {};
         if (options && options.silent) {
             execOpts.silent = true;
-        } else
-            log.simpleInfo(command);
+        }
 
         exec(command, execOpts, function(code, stdout, stderr) {
+            if (!options || (options && options.log))
+                log.simpleInfo(command);
+
             if (code !== 0) {
                 echo(command + ': failed');
                 exit(1);

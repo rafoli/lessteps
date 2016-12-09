@@ -8,11 +8,12 @@ const log = require('../helpers/log-helper');
 const shell = require('../helpers/shell-helper');
 const walk = require('../helpers/walk-helper');
 
+
 // ==============
 // Tasks
 // ==============
 
-const stats = function(cb) {
+const status = function() {
 
     log.title("Git status...");
 
@@ -25,40 +26,39 @@ const stats = function(cb) {
         let projectDir = path.resolve(gitDir, '..');
         let projectName = path.basename(projectDir);
 
-        // Git base command
-        let g = `git --git-dir=${gitDir} --work-tree=${projectDir}`;
+        let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
 
         // Shell opts
         let gOpts = { silent: true };
 
         async.auto({
             branch: function(cb) {
-                shell.run(`${g} rev-parse --symbolic-full-name --abbrev-ref HEAD`, cb, gOpts);
+                getCurrentBranchName(gitDir, projectDir, cb, gOpts);
             },
             local: function(cb) {
-                shell.run(`${g} rev-parse @{0}`, cb, gOpts);
+                shell.run(`${G} rev-parse @{0}`, cb, gOpts);
             },
             remote: function(cb) {
-                shell.run(`${g} rev-parse @{u}`, cb, gOpts);
+                shell.run(`${G} rev-parse @{u}`, cb, gOpts);
             },
             base: function(cb) {
-                shell.run(`${g} merge-base @{0} @{u}`, cb, gOpts);
+                shell.run(`${G} merge-base @{0} @{u}`, cb, gOpts);
             },
             changesNotStaged: function(cb) {
-                shell.run(`${g} diff`, cb, gOpts);
+                shell.run(`${G} diff`, cb, gOpts);
             },
             changesStaged: function(cb) {
-                shell.run(`${g} diff --cached`, cb, gOpts);
+                shell.run(`${G} diff --cached`, cb, gOpts);
             },
             untracked: function(cb) {
-                shell.run(`${g} ls-files --exclude-standard --others`, cb, gOpts);
+                shell.run(`${G} ls-files --exclude-standard --others`, cb, gOpts);
             },
         }, function(err, res) {
             if (err)
                 console.log(err);
             else {
 
-                let branchName = res.branch.replace(/(\r\n|\n|\r)/gm,"");
+                let branchName = res.branch.replace(/(\r\n|\n|\r)/gm, "");
                 let title = `(${branchName}) ${projectName.cyan}`;
 
                 if (res.changesNotStaged.length > 0 || res.changesStaged.length > 0) {
@@ -78,10 +78,35 @@ const stats = function(cb) {
                     }
                 }
 
-                shell.run(`${g} status -s`, null, {sync:true});
+                shell.run(`${G} status -s`, null, { sync: true });
             }
         });
     });
+}
+
+const pull = function() {
+
+    log.title("Git pull...");
+
+    let gitProjects = walk.list(/\.git\/HEAD/g);
+
+    gitProjects.forEach(function(project) {
+
+        // Project info
+        let gitDir = path.dirname(project);
+        let projectDir = path.resolve(gitDir, '..');
+        let projectName = path.basename(projectDir);
+
+        async.auto({
+                branch: function(callback) {
+                    getCurrentBranchName(gitDir, projectDir, callback, {silent: true});
+                },
+                pull_branch: ['branch', function(results, callback) {
+                    let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
+                    shell.run(`${G} pull origin ${results.branch}`, callback, {log: true});
+                }]
+            });
+    })
 }
 
 
@@ -94,8 +119,16 @@ const stats = function(cb) {
 //     }
 // }, { silent: true });
 
+const getCurrentBranchName = function(gitDir, projectDir, callback, options) {
+    let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
+
+    shell.run(`${G} rev-parse --symbolic-full-name --abbrev-ref HEAD`, callback, options);
+}
+
+
 
 
 module.exports = {
-    stats
+    status,
+    pull
 }
