@@ -8,19 +8,7 @@ const ProgressBar = require('ascii-progress');
 
 const deploy = function() {
 
-    let gitProjects = walk.list(/\.bnd/);
-
-    let projects = [];
-
-    gitProjects.forEach(function(project) {
-
-        // Project info
-        let projectDir = path.dirname(project);
-        let projectName = path.basename(projectDir);
-        let reportFile = `./${projectDir}/build/reports/jacoco/test/html/index.html`;
-
-        shell.run(`cd ${projectDir} && gradle clean install deployToLiferay`, null, { sync: true });
-    })
+    run('deploy')
 }
 
 const run = function(command) {
@@ -33,6 +21,8 @@ const run = function(command) {
 
         // Project info
         let projectDir = path.dirname(project);
+
+        log.info(projectDir);
 
         shell.run(`cd ${projectDir} && gradle ${command}`, null, { sync: true });
     })
