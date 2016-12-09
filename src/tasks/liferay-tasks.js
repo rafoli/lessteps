@@ -37,7 +37,7 @@ const cleanLiferayWorkspace = function(cb) {
 }
 
 
-const getGradleCommand = function () {
+const getGradleCommand = function() {
     var localCommand = "./gradlew";
     if (fs.existsSync(localCommand)) {
         return localCommand
@@ -46,7 +46,7 @@ const getGradleCommand = function () {
     }
 };
 
-const initBundle = function (cb) {
+const initBundle = function(cb) {
     log.title("Calling initBundle ...");
 
     var gradleCommand = getGradleCommand();
@@ -70,24 +70,39 @@ const applyPatch = function(patchingToolPath, fixPackPath, cb) {
     log.title("Applying fix-pack...");
     async.series([
         function(callback) {
-            log.info('Removing old [bundles/patching-tool]...');
-            shell.run('rm -rf bundles/patching-tool/', callback);
+            if (patchingToolPath) {
+                log.info('Removing old [bundles/patching-tool]...');
+                shell.run('rm -rf bundles/patching-tool/', callback);
+            } else
+                callback();
         },
         function(callback) {
-            log.info('Unziping patching-tool...');
-            shell.run('unzip -o ' + patchingToolPath + ' -d bundles', callback);
+            if (patchingToolPath) {
+                log.info('Unziping patching-tool...');
+                shell.run('unzip -o ' + patchingToolPath + ' -d bundles', callback);
+            } else
+                callback();
         },
         function(callback) {
-            log.info('Copying fix-pack to [bundles/patching-tool/patches]...');
-            shell.run('cp ' + fixPackPath + ' bundles/patching-tool/patches', callback);
+            if (fixPackPath) {
+                log.info('Copying fix-pack to [bundles/patching-tool/patches]...');
+                shell.run('cp ' + fixPackPath + ' bundles/patching-tool/patches', callback);
+            } else
+                callback();
         },
         function(callback) {
-            log.info('Patching-tool: auto-discovery...');
-            shell.run('sh bundles/patching-tool/patching-tool.sh auto-discovery', callback);
+            if (fixPackPath) {
+                log.info('Patching-tool: auto-discovery...');
+                shell.run('sh bundles/patching-tool/patching-tool.sh auto-discovery', callback);
+            } else
+                callback();
         },
         function(callback) {
-            log.info('Patching-tool: install...');
-            shell.run('sh bundles/patching-tool/patching-tool.sh install', callback);
+            if (fixPackPath) {
+                log.info('Patching-tool: install...');
+                shell.run('sh bundles/patching-tool/patching-tool.sh install', callback);
+            } else
+                callback();
         }
 
     ], cb);

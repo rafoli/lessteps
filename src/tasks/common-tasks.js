@@ -15,10 +15,14 @@ const downloadFileTo = function(propertiesFile, key, toDir, cb) {
         if (err)
             cb(err);
         let fileUrl = data[key];
-        shell.run('wget -P ' + toDir + ' -N ' + fileUrl, function() {
-            let fileName = path.basename(fileUrl);
-            cb(null, (toDir + '/' + fileName));
-        });
+        if (fileUrl) {
+            shell.run('wget -P ' + toDir + ' -N ' + fileUrl, function() {
+                let fileName = path.basename(fileUrl);
+                cb(null, (toDir + '/' + fileName));
+            });
+        }
+        else
+            cb();
     });
 }
 
