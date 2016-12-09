@@ -8,6 +8,7 @@
 
 const common = require('./tasks/common-tasks');
 const git = require('./tasks/git-tasks');
+const gradle = require('./tasks/gradle-tasks');
 const liferay = require('./tasks/liferay-tasks');
 const sybase = require('./tasks/sybase-tasks');
 const test = require('./tasks/test-tasks');
@@ -63,12 +64,27 @@ const initdbCommand = function(env, options) {
     });
 }
 
-const infoCommand = function(options) {
+const gitCommand = function(options) {
     if (options.status)
         git.status();
 
     if (options.pull)
         git.pull();
+
+    if (options.run) {
+        let command = options.run;
+        git.run(command);
+    }
+}
+
+const gradleCommand = function(options) {
+    if (options.deploy)
+        gradle.deploy();
+
+    if (options.run) {
+        let command = options.run;
+        gradle.run(command);
+    }
 }
 
 const unitTestCommand = function(options) {
@@ -97,7 +113,7 @@ const unitTestCommand = function(options) {
 
 // Header
 program
-    .version('0.2.4');
+    .version('0.2.5');
 
 // init
 program
@@ -117,7 +133,15 @@ program
     .description('Git commands')
     .option('-s, --status', 'Projects status')
     .option('-p, --pull', 'Projects status')
-    .action(infoCommand);
+    .action(gitCommand);
+
+// gradle
+program
+    .command('gradle')
+    .description('Gradle commands')
+    .option('-d, --deploy', 'Build, Install and Deploy')
+    .option('-r, --run [command]', 'Command')
+    .action(gradleCommand);
 
 // test
 program
