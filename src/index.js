@@ -66,14 +66,14 @@ const initdbCommand = function(env, options) {
 
 const gitCommand = function(options) {
     if (options.status)
-        git.status();
+        status();
 
     if (options.pull)
-        git.pull();
+        pull();
 
     if (options.commit) {
         let message = options.commit;
-        git.commit(message);
+        commit(message);
     }
 
     if (options.run) {
@@ -84,7 +84,7 @@ const gitCommand = function(options) {
 
 const gradleCommand = function(options) {
     if (options.deploy)
-        gradle.deploy();
+        deploy();
 
     if (options.run) {
         let command = options.run;
@@ -109,8 +109,25 @@ const unitTestCommand = function(options) {
         test.coverage();
 }
 
+// =========
+// Shortcuts
+// =========
 
+const commit = function(message) {
+    git.commit(message);
+}
 
+const deploy = function() {
+    gradle.deploy();
+}
+
+const pull = function() {
+    git.pull();
+}
+
+const status = function() {
+    git.status();
+}
 
 // ===================
 // Program definitions
@@ -118,7 +135,13 @@ const unitTestCommand = function(options) {
 
 // Header
 program
-    .version('0.3.0');
+    .version('0.3.1');
+
+program
+    .option('-c, --commit [message]', 'Commit projects', commit)
+    .option('-d, --deploy', 'Commit projects', deploy)
+    .option('-p, --pull', 'Pull projects', pull)
+    .option('-s, --status', 'Project status', status);
 
 // init
 program
@@ -137,8 +160,8 @@ program
     .command('git')
     .description('Git commands')
     .option('-s, --status', 'Projects status')
-    .option('-p, --pull', 'Projects pull')
-    .option('-c, --commit [message]', 'Projects commit')
+    .option('-p, --pull', 'Pull projects')
+    .option('-c, --commit [message]', 'Commit projects')
     .action(gitCommand);
 
 // gradle
