@@ -71,6 +71,11 @@ const gitCommand = function(options) {
     if (options.pull)
         git.pull();
 
+    if (options.commit) {
+        let message = options.commit;
+        git.commit(message);
+    }
+
     if (options.run) {
         let command = options.run;
         git.run(command);
@@ -113,7 +118,7 @@ const unitTestCommand = function(options) {
 
 // Header
 program
-    .version('0.2.9');
+    .version('0.3.0');
 
 // init
 program
@@ -132,7 +137,8 @@ program
     .command('git')
     .description('Git commands')
     .option('-s, --status', 'Projects status')
-    .option('-p, --pull', 'Projects status')
+    .option('-p, --pull', 'Projects pull')
+    .option('-c, --commit [message]', 'Projects commit')
     .action(gitCommand);
 
 // gradle
