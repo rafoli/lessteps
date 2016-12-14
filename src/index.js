@@ -113,7 +113,7 @@ const unitTestCommand = function(options) {
 
 // Header
 program
-    .version('0.2.8');
+    .version('0.2.9');
 
 // init
 program
