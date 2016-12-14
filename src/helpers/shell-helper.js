@@ -15,6 +15,7 @@ const run = function(command, cb, options) {
             execOpts.silent = true;
         }
 
+
         exec(command, execOpts, function(code, stdout, stderr) {
             if (!options || (options && options.log))
                 log.simpleInfo(command);
