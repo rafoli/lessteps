@@ -142,7 +142,7 @@ const update = function() {
 
 // Header
 program
-  .version('0.3.4');
+  .version('0.3.5');
 
 program
   .option('-c, --commit [message]', 'Commit projects', commit)

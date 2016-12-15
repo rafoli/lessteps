@@ -11,30 +11,43 @@ const deploy = function() {
 
 const run = function(command) {
 
-  let gitProjects = walk.list(/liferay-theme\.json/);
+
+  let gitProjects = walk.list(/package\.json/, 'node_modules');
 
   let projects = [];
 
   gitProjects.forEach(function(project) {
-
     // Project info
     let projectDir = path.dirname(project);
 
-    let themeFile = projectDir + '/liferay-theme.json';
+    try {
+      let packageJsonContent = fs.readFileSync(projectDir + '/package.json');
 
-    let content = fs.readFileSync(themeFile);
+      if (packageJsonContent && packageJsonContent.includes('liferay-theme-tasks')) {
 
-    var themeConfig = JSON.parse(content);
+        let themeConfig = { LiferayTheme: { deployPath: null } };
+        let themeFile = projectDir + '/liferay-theme.json';
 
-    if (!themeConfig || !themeConfig.LiferayTheme || !themeConfig.LiferayTheme.deployPath) {
-      askForDeployPath(function(err, res) {
-        themeConfig.LiferayTheme.deployPath = res;
-        fs.writeFileSync(themeFile.toString(), JSON.stringify(themeConfig), 'utf8');
-        runCommand(projectDir, command);
-      })
-    } else {
-      runCommand(projectDir, command);
-    }
+        try {
+          liferayTheme = fs.readFileSync(themeFile);
+          themeConfig = JSON.parse(liferayTheme);
+        } catch (err) {}
+
+        if (!themeConfig.LiferayTheme.deployPath) {
+
+          askForDeployPath(function(err, res) {
+            themeConfig.LiferayTheme.deployPath = res;
+            fs.writeFileSync(themeFile, JSON.stringify(themeConfig), 'utf8');
+            runCommand(projectDir, command);
+          })
+
+        } else {
+          runCommand(projectDir, command);
+        }
+      }
+    } catch (err) {}
+
+
 
   })
 }
@@ -46,14 +59,14 @@ const runCommand = function(projectDir, command) {
 }
 
 const askForDeployPath = function(callback) {
-  prompt.message = `Theme deploy folder not found.`.cyan;
+  prompt.message = `Liferay's Theme: deploy folder not found!`.red;
 
   prompt.start();
 
   prompt.get({
     properties: {
       opt: {
-        description: "? Enter your deploy directory (../[BUNDLE_PATH]/bundles/deploy)"
+        description: "? Enter your deploy directory (../[BUNDLE_PATH]/bundles/deploy)".cyan
       }
     }
   }, function(err, result) {
