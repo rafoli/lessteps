@@ -21,8 +21,9 @@ const run = function(command) {
     let projectDir = path.dirname(project);
 
     try {
-      let packageJsonContent = fs.readFileSync(projectDir + '/package.json').toString();
+      let packageJsonContent = fs.readFileSync(projectDir + '/package.json', "utf8");
 
+      console.log(packageJsonContent);
 
       if (packageJsonContent && packageJsonContent.includes('liferay-theme-tasks')) {
 
@@ -30,7 +31,10 @@ const run = function(command) {
         let themeFile = projectDir + '/liferay-theme.json';
 
         try {
-          liferayTheme = fs.readFileSync(themeFile).toString();
+          liferayTheme = fs.readFileSync(themeFile, "utf8");
+
+          console.log(liferayTheme);
+
           themeConfig = JSON.parse(liferayTheme);
         } catch (err) {}
 
