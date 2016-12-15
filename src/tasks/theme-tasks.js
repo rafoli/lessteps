@@ -23,17 +23,13 @@ const run = function(command) {
     try {
       let packageJsonContent = fs.readFileSync(projectDir + '/package.json', "utf8");
 
-      console.log(packageJsonContent);
-
-      if (packageJsonContent && packageJsonContent.includes('liferay-theme-tasks')) {
+      if (packageJsonContent && packageJsonContent.indexOf('liferay-theme-tasks') >= 0) {
 
         let themeConfig = { LiferayTheme: { deployPath: null } };
         let themeFile = projectDir + '/liferay-theme.json';
 
         try {
           liferayTheme = fs.readFileSync(themeFile, "utf8");
-
-          console.log(liferayTheme);
 
           themeConfig = JSON.parse(liferayTheme);
         } catch (err) {}

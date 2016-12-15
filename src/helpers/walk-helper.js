@@ -22,7 +22,7 @@ const walkSync = function(dir, filelist, excludes) {
   filelist = filelist || [];
   files.forEach(function(file) {
 
-    if (!excludes || (excludes && !file.includes(excludes))) {
+    if (!excludes || (excludes && file.indexOf(excludes) < 0)) {
 
       let innerDir = path.join(dir, file);
       if (fs.statSync(innerDir).isDirectory()) {
