@@ -142,11 +142,11 @@ const update = function() {
 
 // Header
 program
-  .version('0.3.6');
+  .version('0.3.7');
 
 program
   .option('-c, --commit [message]', 'Commit projects', commit)
-  .option('-d, --deploy', 'Commit projects', deploy)
+  .option('-d, --deploy', 'Deploy projects', deploy)
   .option('-p, --pull', 'Pull projects', pull)
   .option('-s, --status', 'Project status', status)
   .option('-u, --update', 'Update ' + 'les'.cyan + 's' + 'teps'.red, update);
