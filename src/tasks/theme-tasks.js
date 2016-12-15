@@ -29,7 +29,7 @@ const run = function(command) {
         let themeFile = projectDir + '/liferay-theme.json';
 
         try {
-          liferayTheme = fs.readFileSync(themeFile, "utf8");
+          let liferayTheme = fs.readFileSync(themeFile, "utf8");
 
           themeConfig = JSON.parse(liferayTheme);
         } catch (err) {}
