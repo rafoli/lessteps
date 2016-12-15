@@ -13,6 +13,7 @@ const gradle = require('./tasks/gradle-tasks');
 const liferay = require('./tasks/liferay-tasks');
 const sybase = require('./tasks/sybase-tasks');
 const test = require('./tasks/test-tasks');
+const theme = require('./tasks/theme-tasks');
 
 const async = require('async');
 const colors = require('colors');
@@ -120,6 +121,7 @@ const commit = function(message) {
 
 const deploy = function() {
   gradle.deploy();
+  theme.deploy();
 }
 
 const pull = function() {
@@ -140,7 +142,7 @@ const update = function() {
 
 // Header
 program
-  .version('0.3.3');
+  .version('0.3.4');
 
 program
   .option('-c, --commit [message]', 'Commit projects', commit)
@@ -168,6 +170,7 @@ program
   .option('-s, --status', 'Projects status')
   .option('-p, --pull', 'Pull projects')
   .option('-c, --commit [message]', 'Commit projects')
+  .option('-r, --run [command]', 'Command')
   .action(gitCommand);
 
 // gradle

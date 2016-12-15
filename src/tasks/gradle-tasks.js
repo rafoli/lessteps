@@ -8,7 +8,7 @@ const ProgressBar = require('ascii-progress');
 
 const deploy = function() {
 
-    run('deploy install')
+    run('deploy')
 }
 
 const run = function(command) {

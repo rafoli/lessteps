@@ -133,6 +133,25 @@ const commit = function(message) {
   })
 }
 
+const run = function(command) {
+
+  log.title("Git commit...");
+
+  let gitProjects = walk.list(/\.git\/HEAD/g);
+
+  gitProjects.forEach(function(project) {
+
+    // Project info
+    let gitDir = path.dirname(project);
+    let projectDir = path.resolve(gitDir, '..');
+    let projectName = path.basename(projectDir);
+
+    let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
+    shell.run(`${G} ${command}`, null, { log: true });
+
+  })
+}
+
 
 //shell.run(`git --git-dir=${gitDir} remote set-url origin http://bgcldevops/bgp-bel-portal/${projectName}`, function(err, res){}, {log:true});
 
@@ -155,5 +174,6 @@ const getCurrentBranchName = function(gitDir, projectDir, callback, options) {
 module.exports = {
   status,
   pull,
-  commit
+  commit,
+  run
 }
