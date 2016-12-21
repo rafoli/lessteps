@@ -135,7 +135,7 @@ const commit = function(message) {
 
 const run = function(command) {
 
-  log.title("Git commit...");
+  log.title("Git - commit...");
 
   let gitProjects = walk.list(/\.git\/HEAD/g);
 
@@ -148,6 +148,26 @@ const run = function(command) {
 
     let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
     shell.run(`${G} ${command}`, null, { log: true });
+
+  })
+}
+
+const branch = function(name) {
+
+  log.title("Git - new branch...");
+
+  let gitProjects = walk.list(/\.git\/HEAD/g);
+
+  gitProjects.forEach(function(project) {
+
+    // Project info
+    let gitDir = path.dirname(project);
+    let projectDir = path.resolve(gitDir, '..');
+    let projectName = path.basename(projectDir);
+
+    let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
+    shell.run(`${G} checkout -b ${name}`, null, { log: true });
+    shell.run(`${G} push --set-upstream origin ${name}`, null, { log: true });
 
   })
 }
@@ -172,6 +192,7 @@ const getCurrentBranchName = function(gitDir, projectDir, callback, options) {
 
 
 module.exports = {
+  branch,
   status,
   pull,
   commit,

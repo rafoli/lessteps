@@ -119,6 +119,10 @@ const commit = function(message) {
   git.commit(message);
 }
 
+const branch = function(name) {
+  git.branch(name);
+}
+
 const deploy = function() {
   gradle.deploy();
   theme.deploy();
@@ -142,12 +146,13 @@ const update = function() {
 
 // Header
 program
-  .version('0.3.10');
+  .version('0.4.0');
 
 program
   .option('-c, --commit [message]', 'Commit projects', commit)
   .option('-d, --deploy', 'Deploy projects', deploy)
   .option('-p, --pull', 'Pull projects', pull)
+  .option('-b, --branch [name]', 'Create a new branch', branch)
   .option('-s, --status', 'Project status', status)
   .option('-u, --update', 'Update ' + 'les'.cyan + 's' + 'teps'.red, update);
 
@@ -170,6 +175,7 @@ program
   .option('-s, --status', 'Projects status')
   .option('-p, --pull', 'Pull projects')
   .option('-c, --commit [message]', 'Commit projects')
+  .option('-b, --branch [name]', 'Create a new branch')
   .option('-r, --run [command]', 'Command')
   .action(gitCommand);
 
