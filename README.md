@@ -23,34 +23,34 @@ $ les -h
 
   Commands:
 
-    init               Create Liferay's bundle (default profile - dev)
-    initdb             Init a DB instance
-    git [options]      Git commands
+    init                      Create Liferay's bundle (default profile - dev)
+    initdb                    Init a DB instance
+    git [options]             Git commands
       -s, --status            Projects status
       -p, --pull              Pull projects
       -c, --commit [message]  Commit projects
       -b, --branch [name]     Create a new branch
       -r, --run [command]     Command    
-    gradle [options]   Gradle commands
-      -d, --deploy         Build, Install and Deploy
-      -r, --run [command]  Command
-    test [options]     Git commands
-      -u, --unitTest         Run unitTest
-      -f, --functionalTest   Run functionalTest
-      -s, --sanityTest       Run sanityTest
-      -i, --integrationTest  Run integrationTest
-      -c, --coverage         Run test coverage    
+    gradle [options]          Gradle commands
+      -d, --deploy            Build, Install and Deploy
+      -r, --run [command]     Command
+    test [options]            Git commands
+      -u, --unitTest          Run unitTest
+      -f, --functionalTest    Run functionalTest
+      -s, --sanityTest        Run sanityTest
+      -i, --integrationTest   Run integrationTest
+      -c, --coverage          Run test coverage    
 
   Options:
 
-    -h, --help              output usage information
-    -V, --version           output the version number
-    -c, --commit [message]  Commit projects
-    -d, --deploy            Deploy projects
-    -p, --pull              Pull projects
-    -b, --branch [name]     Create a new branch
-    -s, --status            Project status
-    -u, --update            Update lessteps
+    -h, --help                Output usage information
+    -V, --version             Output the version number
+    -c, --commit [message]    Commit projects
+    -d, --deploy              Deploy projects
+    -p, --pull                Pull projects
+    -b, --branch [name]       Create a new branch
+    -s, --status              Project status
+    -u, --update              Update lessteps
 ```
 
 
