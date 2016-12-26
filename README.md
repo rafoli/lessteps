@@ -12,7 +12,7 @@ $ npm install -g lessteps
 ## Usage
 
 <h1>
-	<img width="300" src="https://rawgit.com/rafoli/lessteps/master/logo.png" alt="lessteps">
+	<img width="400" src="https://rawgit.com/rafoli/lessteps/master/logo.png" alt="lessteps">
 </h1>
 
 ```
