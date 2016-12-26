@@ -23,14 +23,22 @@ $ les -h
 
   Commands:
 
-    init     Create Liferay's bundle
-    initdb   Init a DB instance
+    init               Create Liferay's bundle (default profile - dev)
+    initdb             Init a DB instance
+    git [options]      Git commands
+    gradle [options]   Gradle commands
+    test [options]     Git commands
 
   Options:
 
-    -h, --help     output usage information
-    -V, --version  output the version number
-    -p, --profile  Choose config profile
+    -h, --help              output usage information
+    -V, --version           output the version number
+    -c, --commit [message]  Commit projects
+    -d, --deploy            Deploy projects
+    -p, --pull              Pull projects
+    -b, --branch [name]     Create a new branch
+    -s, --status            Project status
+    -u, --update            Update lessteps
 ```
 
 
