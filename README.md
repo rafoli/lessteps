@@ -26,8 +26,20 @@ $ les -h
     init               Create Liferay's bundle (default profile - dev)
     initdb             Init a DB instance
     git [options]      Git commands
+      -s, --status            Projects status
+      -p, --pull              Pull projects
+      -c, --commit [message]  Commit projects
+      -b, --branch [name]     Create a new branch
+      -r, --run [command]     Command    
     gradle [options]   Gradle commands
+      -d, --deploy         Build, Install and Deploy
+      -r, --run [command]  Command
     test [options]     Git commands
+      -u, --unitTest         Run unitTest
+      -f, --functionalTest   Run functionalTest
+      -s, --sanityTest       Run sanityTest
+      -i, --integrationTest  Run integrationTest
+      -c, --coverage         Run test coverage    
 
   Options:
 
