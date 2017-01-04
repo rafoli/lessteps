@@ -46,11 +46,15 @@ const getGradleCommand = function() {
     }
 };
 
-const initBundle = function(cb) {
+const initBundle = function(options, cb) {
     log.title("Calling initBundle ...");
 
-    var gradleCommand = getGradleCommand();
-    shell.run(gradleCommand + ' initBundle ', cb);
+    let gradleCommand = getGradleCommand();
+    let initBundle = gradleCommand + ' initBundle ';
+    if (options.skipDownload) {
+        initBundle += '-x downloadBundle';
+    }
+    shell.run(initBundle, cb);
 }
 
 const applyLicense = function(cb) {

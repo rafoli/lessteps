@@ -23,13 +23,13 @@ const program = require('commander');
 // Commands
 // ==============
 
-const initCommand = function(env, options) {
+const initCommand = function(options) {
   async.auto({
     clean_liferay_workspace: function(cb) {
       liferay.cleanLiferayWorkspace(cb);
     },
     init_bundle: ['clean_liferay_workspace', function(results, cb) {
-      liferay.initBundle(cb);
+      liferay.initBundle(options, cb);
     }],
     apply_license: ['init_bundle', function(results, cb) {
       liferay.applyLicense(cb);
@@ -146,7 +146,7 @@ const update = function() {
 
 // Header
 program
-  .version('0.4.0');
+  .version('0.4.1');
 
 program
   .option('-c, --commit [message]', 'Commit projects', commit)
@@ -159,6 +159,7 @@ program
 // init
 program
   .command('init')
+  .option('-x, --skipDownload', 'Skip download')
   .description('Create Liferay\'s bundle (default profile - dev)')
   .action(initCommand);
 
