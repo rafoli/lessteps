@@ -9,7 +9,7 @@ const semver = require('semver');
 
 const update = function() {
   log.title("Updating lessteps...");
-  shell.run(`sudo npm update -g lessteps && sudo npm install -g lessteps`, null, { log: true });
+  shell.run(`sudo npm remove -g lessteps && sudo npm install -g lessteps`, null, { log: true });
 }
 
 const checkVersion = function(currentVersion, callback) {
