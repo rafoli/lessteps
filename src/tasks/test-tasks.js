@@ -82,9 +82,9 @@ const coverage = function() {
         var red = '\u001b[41m \u001b[0m';
 
         var bar = new ProgressBar({
-            schema: '|:bar.gradient(red,cyan)| :percent => :title ',
+            schema: '|:bar.gradient(red,cyan)| :current% => :title ',
             width: 20,
-            total: 100,
+            total: 101
         });
         bar.tick(project.value, {title: project.name});
     })
