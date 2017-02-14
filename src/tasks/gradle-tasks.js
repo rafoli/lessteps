@@ -6,12 +6,12 @@ const walk = require('../helpers/walk-helper');
 const ProgressBar = require('ascii-progress');
 
 
-const deploy = function() {
+const deploy = function(callback) {
 
-    run('deploy install')
+    run('deploy install', callback)
 }
 
-const run = function(command) {
+const run = function(command, callback) {
 
     let gitProjects = walk.list(/\.bnd/);
 
@@ -26,6 +26,9 @@ const run = function(command) {
 
         shell.run(`cd ${projectDir} && gradle ${command}`, null, { sync: true });
     })
+
+    if (callback)
+        callback();
 }
 
 module.exports = {

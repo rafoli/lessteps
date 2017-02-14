@@ -111,6 +111,26 @@ const unitTestCommand = function(options) {
     test.coverage();
 }
 
+const qaCommand = function(options) {
+  let branches = options.split(',');
+
+  branches.forEach(function(branch) {
+    git.branch(branch, false);
+  });
+
+
+  async.series([
+      function(callback) {
+          git.pull(callback);
+      },
+      function(callback) {
+          git.status(callback);
+      }
+  ]);
+
+
+}
+
 // =========
 // Shortcuts
 // =========
@@ -120,7 +140,7 @@ const commit = function(message) {
 }
 
 const branch = function(name) {
-  git.branch(name);
+  git.branch(name, true);
 }
 
 const deploy = function() {
@@ -146,7 +166,7 @@ const update = function() {
 
 // Header
 program
-  .version('0.4.4');
+  .version('0.5.0');
 
 program
   .option('-c, --commit [message]', 'Commit projects', commit)
@@ -198,6 +218,12 @@ program
   .option('-i, --integrationTest', 'Run integrationTest')
   .option('-c, --coverage', 'Run test coverage')
   .action(unitTestCommand);
+
+// qa
+program
+  .command('qa')
+  .description('QA commands')
+  .action(qaCommand);  
 
 // Title
 console.log('┬  ┌─┐┌─┐'.cyan + '┌─┐' + '┌┬┐┌─┐┌─┐┌─┐'.red);

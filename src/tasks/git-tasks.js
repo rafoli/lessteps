@@ -2,6 +2,7 @@ const _ = require('lodash');
 const async = require('async');
 
 const path = require('path');
+const prompt = require('prompt');
 const fs = require('fs');
 
 const log = require('../helpers/log-helper');
@@ -13,18 +14,19 @@ const walk = require('../helpers/walk-helper');
 // Tasks
 // ==============
 
-const status = function() {
+const status = function(callback) {
 
   log.title("Git status...");
 
   let gitProjects = walk.list(/\.git\/HEAD/g);
 
-  gitProjects.forEach(function(project) {
+  async.each(gitProjects, function(project, cbEach) {
 
     // Project info
     let gitDir = path.dirname(project);
     let projectDir = path.resolve(gitDir, '..');
     let projectName = path.basename(projectDir);
+
 
     let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
 
@@ -79,34 +81,50 @@ const status = function() {
         }
 
         shell.run(`${G} status -s`, null, { sync: true });
+
+        cbEach();
       }
     });
+  }, function(err) {
+      if (err && callback)
+        callback(err);
+      if (callback)
+        callback();
   });
 }
 
-const pull = function() {
+const pull = function(callback) {
 
   log.title("Git pull...");
 
   let gitProjects = walk.list(/\.git\/HEAD/g);
 
-  gitProjects.forEach(function(project) {
+  async.each(gitProjects, function(project, cb) {
 
-    // Project info
+          // Project info
     let gitDir = path.dirname(project);
     let projectDir = path.resolve(gitDir, '..');
     let projectName = path.basename(projectDir);
 
     async.auto({
-      branch: function(callback) {
-        getCurrentBranchName(gitDir, projectDir, callback, { silent: true });
+      branch: function(cbAuto) {
+        getCurrentBranchName(gitDir, projectDir, cbAuto, { silent: true });
       },
-      pull_branch: ['branch', function(results, callback) {
+      pull_branch: ['branch', function(results, cbAuto) {
         let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
-        shell.run(`${G} pull origin ${results.branch}`, callback, { log: true });
+        log.info(projectDir);
+        shell.run(`${G} pull`, cbAuto, { log: true });
       }]
-    });
-  })
+    }, cb);
+
+
+  }, function(err) {
+      if (err && callback)
+        callback(err);
+      if (callback)
+        callback();
+  });
+
 }
 
 const commit = function(message) {
@@ -152,9 +170,9 @@ const run = function(command) {
   })
 }
 
-const branch = function(name) {
+const branch = function(name, createIfNotExist) {
 
-  log.title("Git - new branch...");
+  log.title("Git - branch...");
 
   let gitProjects = walk.list(/\.git\/HEAD/g);
 
@@ -165,11 +183,23 @@ const branch = function(name) {
     let projectDir = path.resolve(gitDir, '..');
     let projectName = path.basename(projectDir);
 
-    let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
-    shell.run(`${G} checkout -b ${name}`, null, { log: true });
-    shell.run(`${G} push --set-upstream origin ${name}`, null, { log: true });
+    log.info(projectDir);
 
-  })
+    let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
+
+    shell.run(`${G} fetch`, null, { log: true });
+
+    if (createIfNotExist) {
+      shell.run(`${G} checkout -b ${name}`, null, { log: true });
+      shell.run(`${G} push --set-upstream origin ${name}`, null, { log: true });
+    } else {
+      shell.run(`${G} checkout ${name}`, null, { log: true });
+      console.log('');
+    }
+
+
+  });
+
 }
 
 
