@@ -1,6 +1,6 @@
 {
   "name": "lessteps",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "lessteps",
   "main": "lib/index.js",
   "scripts": {

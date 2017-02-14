@@ -12,18 +12,24 @@ const update = function() {
   shell.run(`sudo npm update -g lessteps && sudo npm install -g lessteps`, null, { log: true });
 }
 
-const checkVersion = function(currentVersion, callback) {
-  shell.run('npm show lessteps version', function(err, res) {
+const checkVersion = function(currentVersion, options, callback) {
 
-    let latestVersion = res.replace(/(\r\n|\n|\r)/gm, "");
+  if(options.indexOf('-x') < 0) {
+    shell.run('npm show lessteps version', function(err, res) {
 
-    if (semver.lt(currentVersion, latestVersion)) {
-      askForUpdate(latestVersion);
-    } else {
-      callback();
-    }
+      let latestVersion = res.replace(/(\r\n|\n|\r)/gm, "");
 
-  }, { silent: true });
+      if (semver.lt(currentVersion, latestVersion)) {
+        askForUpdate(latestVersion);
+      } else {
+        callback();
+      }
+
+    }, { silent: true });
+  }
+  else {
+    callback();
+  }
 }
 
 const askForUpdate = function(latestVersion) {

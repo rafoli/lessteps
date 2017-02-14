@@ -5,30 +5,48 @@ const shell = require('../helpers/shell-helper');
 const walk = require('../helpers/walk-helper');
 const ProgressBar = require('ascii-progress');
 
+const MAX_PARALLEL_TASKS = 3;
 
-const deploy = function(callback) {
 
-    run('deploy install', callback)
+const deploy = function(parallel) {
+
+    run('deploy install', parallel)
 }
 
-const run = function(command, callback) {
+const run = function(command, parallel) {
 
     let gitProjects = walk.list(/\.bnd/);
 
     let projects = [];
 
+    let names = [];
+    let commands = "";
+
     gitProjects.forEach(function(project) {
 
         // Project info
         let projectDir = path.dirname(project);
+        let projectName = path.basename(projectDir);
 
-        log.info(projectDir);
 
-        shell.run(`cd ${projectDir} && gradle ${command}`, null, { sync: true });
+        if (!parallel) {
+            log.info(projectDir);
+            shell.run(`cd ${projectDir} && gradle ${command}`, null, { sync: true });
+        }
+        else {
+            names.push(projectName);
+            commands += `"cd ${projectDir} && gradle ${command}" `;
+
+            if (names.length == MAX_PARALLEL_TASKS) {
+                let parallelRun = `concurrently --prefix "[{name}]" --names "${names}" ${commands} `; 
+                shell.run(parallelRun , null, { sync: true });
+                names = [];
+                commands = "";             
+            }
+        }
+        
     })
 
-    if (callback)
-        callback();
 }
 
 module.exports = {

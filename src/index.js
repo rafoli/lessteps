@@ -145,7 +145,10 @@ const branch = function(name) {
 
 const deploy = function() {
   gradle.deploy();
-  theme.deploy();
+}
+
+const deployParallel = function() {
+  gradle.deploy(true);
 }
 
 const pull = function() {
@@ -166,15 +169,17 @@ const update = function() {
 
 // Header
 program
-  .version('0.5.0');
+  .version('0.6.0');
 
 program
   .option('-c, --commit [message]', 'Commit projects', commit)
   .option('-d, --deploy', 'Deploy projects', deploy)
+  .option('-f, --deployParallel', 'Deploy projects in Parallel', deployParallel)
   .option('-p, --pull', 'Pull projects', pull)
   .option('-b, --branch [name]', 'Create a new branch', branch)
   .option('-s, --status', 'Project status', status)
-  .option('-u, --update', 'Update ' + 'les'.cyan + 's' + 'teps'.red, update);
+  .option('-u, --update', 'Update ' + 'les'.cyan + 's' + 'teps'.red, update)
+  .option('-x, --skipDownload', 'Skip downloads and checks', function(){});
 
 // init
 program
@@ -205,6 +210,7 @@ program
   .command('gradle')
   .description('Gradle commands')
   .option('-d, --deploy', 'Build, Install and Deploy')
+  .option('-dp, --deployParallel', 'Build, Install and Deploy in Parallel')
   .option('-r, --run [command]', 'Command')
   .action(gradleCommand);
 
@@ -231,7 +237,7 @@ console.log('│  ├┤ └─┐'.cyan + '└─┐' + ' │ ├┤ ├─┘�
 console.log('┴─┘└─┘└─┘'.cyan + '└─┘' + ' ┴ └─┘┴  └─┘'.red + ' v' + program.version());
 
 
-core.checkVersion(program.version(), function(err, res) {
+core.checkVersion(program.version(), process.argv, function(err, res) {
   if (err) console.log(err);
   else // Parse command line
     program.parse(process.argv);

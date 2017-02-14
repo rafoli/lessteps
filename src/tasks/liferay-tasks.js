@@ -51,9 +51,13 @@ const initBundle = function(options, cb) {
 
     let gradleCommand = getGradleCommand();
     let initBundle = gradleCommand + ' initBundle ';
-    if (options.skipDownload) {
+
+
+    if(options.parent.rawArgs.indexOf('-x') > -1) {
         initBundle += '-x downloadBundle';
     }
+
+        console.log(initBundle);
     shell.run(initBundle, cb);
 }
 
