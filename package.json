@@ -1,6 +1,6 @@
 {
   "name": "lessteps",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "lessteps",
   "main": "lib/index.js",
   "scripts": {
@@ -32,6 +32,7 @@
     "child_process": "^1.0.2",
     "colors": "^1.1.2",
     "commander": "^2.9.0",
+    "concurrently": "^3.3.0",
     "progress": "^1.1.8",
     "prompt": "^1.0.0",
     "properties-parser": "^0.3.1",
