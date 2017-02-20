@@ -56,7 +56,6 @@ const updateMergeRequest = function(project, options, callback) {
 // ==============
 
 module.exports = {
-  mr,
   projectId,
   userId,
   addMergeRequest,
