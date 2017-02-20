@@ -1,11 +1,27 @@
-// ==============
-// Tasks
-// ==============
+#!/usr/bin/env node
+
+'use strict';
+
+// ===================
+// Module dependencies
+// ===================
+
+/**
+ * External
+ */
+
+const async = require('async');
+
+/**
+ * Internal
+ */
 
 const shell = require('../helpers/shell-helper');
 const log = require('../helpers/log-helper');
 
-const async = require('async');
+// ==============
+// Tasks
+// ==============
 
 const stopSybase = function(cb) {
     log.title("Stopping SyBase container...");
@@ -48,6 +64,10 @@ const createLPortal = function(scriptPath, cb) {
     ], cb);
 
 }
+
+// ==============
+// Export
+// ==============
 
 module.exports = {
     stopSybase,

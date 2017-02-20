@@ -1,11 +1,27 @@
-// ==============
-// Helpers
-// ==============
+#!/usr/bin/env node
+
+'use strict';
+
+// ===================
+// Module dependencies
+// ===================
+
+/**
+ * External
+ */
 
 const child_process = require('child_process');
 require('shelljs/global');
 
+/**
+ * Internal
+ */
+
 const log = require('./log-helper');
+
+// ==============
+// Helpers
+// ==============
 
 const run = function(command, cb, options) {
     if (!options || (options && options.silent)) {
@@ -38,6 +54,10 @@ const run = function(command, cb, options) {
         }
     }
 }
+
+// ==============
+// Export
+// ==============
 
 module.exports = {
     run

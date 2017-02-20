@@ -2,166 +2,55 @@
 
 'use strict';
 
-/**
- * Module dependencies.
- */
+// ===================
+// Module dependencies
+// ===================
 
-const common = require('./tasks/common-tasks');
-const core = require('./tasks/core-tasks');
-const git = require('./tasks/git-tasks');
-const gradle = require('./tasks/gradle-tasks');
-const liferay = require('./tasks/liferay-tasks');
-const sybase = require('./tasks/sybase-tasks');
-const test = require('./tasks/test-tasks');
-const theme = require('./tasks/theme-tasks');
+/**
+ * External
+ */
 
 const async = require('async');
 const colors = require('colors');
 const program = require('commander');
 
-// ==============
+/**
+ * Internal
+ */
+
+// Tasks
+const core = require('./tasks/core-tasks');
+const git = require('./tasks/git-tasks');
 // Commands
-// ==============
-
-const initCommand = function(options) {
-  async.auto({
-    clean_liferay_workspace: function(cb) {
-      liferay.cleanLiferayWorkspace(cb);
-    },
-    init_bundle: ['clean_liferay_workspace', function(results, cb) {
-      liferay.initBundle(options, cb);
-    }],
-    apply_license: ['init_bundle', function(results, cb) {
-      liferay.applyLicense(cb);
-    }],
-    patching_tool_path: ['apply_license', function(results, cb) {
-      common.downloadFileTo('gradle.properties', 'liferay.patchingtool.bundle.url', '~/.liferay/patching-tool', cb);
-    }],
-    fix_pack_path: ['patching_tool_path', function(results, cb) {
-      common.downloadFileTo('gradle.properties', 'liferay.fixpack.bundle.url', '~/.liferay/fix-packs', cb);
-    }],
-    applyPatch: ['fix_pack_path', function(results, cb) {
-      liferay.applyPatch(results.patching_tool_path, results.fix_pack_path, cb);
-    }]
-  });
-}
-
-const initdbCommand = function(env, options) {
-  async.auto({
-    stop_sybase: function(cb) {
-      sybase.stopSybase(cb);
-    },
-    remove_sybase: ['stop_sybase', function(results, cb) {
-      sybase.removeSybase(cb);
-    }],
-    start_sybase: ['remove_sybase', function(results, cb) {
-      sybase.startSybase(cb);
-    }],
-    sybase_script: ['start_sybase', function(results, cb) {
-      common.downloadUrlTo('https://raw.githubusercontent.com/rafoli/lessteps/master/src/tasks/sybase-lportal.sql', '~/.liferay/scripts', cb);
-    }],
-    create_lportal: ['sybase_script', function(results, cb) {
-      sybase.createLPortal(results.sybase_script, cb);
-    }]
-  });
-}
-
-const gitCommand = function(options) {
-  if (options.status)
-    status();
-
-  if (options.pull)
-    pull();
-
-  if (options.commit) {
-    let message = options.commit;
-    commit(message);
-  }
-
-  if (options.run) {
-    let command = options.run;
-    git.run(command);
-  }
-}
-
-const gradleCommand = function(options) {
-  if (options.deploy)
-    deploy();
-
-  if (options.run) {
-    let command = options.run;
-    gradle.run(command);
-  }
-}
-
-const unitTestCommand = function(options) {
-  if (options.unitTest)
-    test.unitTest();
-
-  if (options.functionalTest)
-    test.functionalTest();
-
-  if (options.sanityTest)
-    test.sanityTest();
-
-  if (options.functionalTest)
-    test.functionalTest();
-
-  if (options.coverage)
-    test.coverage();
-}
-
-const qaCommand = function(options) {
-  let branches = options.split(',');
-
-  branches.forEach(function(branch) {
-    git.branch(branch, false);
-  });
-
-
-  async.series([
-      function(callback) {
-          git.pull(callback);
-      },
-      function(callback) {
-          git.status(callback);
-      }
-  ]);
-
-
-}
+const initCommand = require('./commands/init-command');
+const initdbCommand = require('./commands/initdb-command');
+const gradleCommand = require('./commands/gradle-command');
+const gitCommand = require('./commands/git-command');
+const mrCommand = require('./commands/mr-command');
+const qaCommand = require('./commands/qa-command');
+const testCommand = require('./commands/test-command');
+const updateCommand = require('./commands/test-command');
 
 // =========
 // Shortcuts
 // =========
 
-const commit = function(message) {
-  git.commit(message);
-}
-
-const branch = function(name) {
-  git.branch(name, true);
-}
-
-const deploy = function() {
-  gradle.deploy();
-}
-
-const deployParallel = function() {
-  gradle.deploy(true);
-}
-
-const pull = function() {
-  git.pull();
-}
-
-const status = function() {
+const statusShortcut = function() {
   git.status();
 }
 
-const update = function() {
-  core.update();
+const deployShortcut = function() {
+  gradle.deploy();
 }
+
+const pullShortcut = function() {
+  git.pull();
+}
+
+const branchShortcut = function(name) {
+  git.branch(name, true);
+}
+
 
 // ===================
 // Program definitions
@@ -172,13 +61,10 @@ program
   .version('0.6.1');
 
 program
-  .option('-c, --commit [message]', 'Commit projects', commit)
-  .option('-d, --deploy', 'Deploy projects', deploy)
-  .option('-f, --deployParallel', 'Deploy projects in Parallel', deployParallel)
-  .option('-p, --pull', 'Pull projects', pull)
-  .option('-b, --branch [name]', 'Create a new branch', branch)
-  .option('-s, --status', 'Project status', status)
-  .option('-u, --update', 'Update ' + 'les'.cyan + 's' + 'teps'.red, update)
+  .option('-s, --status', 'Projects status', statusShortcut)
+  .option('-b, --branch [name]', 'Create a new branch', branchShortcut)
+  .option('-d, --deploy', 'Deploy projects', deployShortcut)
+  .option('-p, --pull', 'Pull projects', pullShortcut)
   .option('-x, --skipDownload', 'Skip downloads and checks', function(){});
 
 // init
@@ -186,13 +72,20 @@ program
   .command('init')
   .option('-x, --skipDownload', 'Skip download')
   .description('Create Liferay\'s bundle (default profile - dev)')
-  .action(initCommand);
+  .action(initCommand.init);
 
 // initdb
 program
   .command('initdb')
   .description('Init a DB instance')
-  .action(initdbCommand);
+  .action(initdbCommand.initdb);
+
+// update
+program
+  .command('update')
+  .description('Update ' + 'les'.cyan + 's' + 'teps'.red)
+  .action(updateCommand.update);  
+
 
 // git
 program
@@ -203,7 +96,7 @@ program
   .option('-c, --commit [message]', 'Commit projects')
   .option('-b, --branch [name]', 'Create a new branch')
   .option('-r, --run [command]', 'Command')
-  .action(gitCommand);
+  .action(gitCommand.git);
 
 // gradle
 program
@@ -212,7 +105,7 @@ program
   .option('-d, --deploy', 'Build, Install and Deploy')
   .option('-dp, --deployParallel', 'Build, Install and Deploy in Parallel')
   .option('-r, --run [command]', 'Command')
-  .action(gradleCommand);
+  .action(gradleCommand.gradle);
 
 // test
 program
@@ -223,13 +116,25 @@ program
   .option('-s, --sanityTest', 'Run sanityTest')
   .option('-i, --integrationTest', 'Run integrationTest')
   .option('-c, --coverage', 'Run test coverage')
-  .action(unitTestCommand);
+  .action(testCommand.test);
 
 // qa
 program
   .command('qa')
   .description('QA commands')
-  .action(qaCommand);  
+  .action(qaCommand.qa);  
+
+// mr
+program
+  .command('mr')
+  .option('-g, --group [group]', 'Owner username')
+  .option('-u, --user [user/assignee]', 'User/Assigne name')
+  .option('-t, --targetBranch [targetBranch]', 'Target branch')
+  .option('-m, --message [message]', 'Message of MR')
+  .option('-d, --description [description]', 'Description of MR')
+  .option('-l, --labels [labels]', 'Labels for MR as a comma-separated list')
+  .description('MR commands')
+  .action(mrCommand.mr);   
 
 // Title
 console.log('┬  ┌─┐┌─┐'.cyan + '┌─┐' + '┌┬┐┌─┐┌─┐┌─┐'.red);

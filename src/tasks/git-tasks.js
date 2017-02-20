@@ -1,9 +1,24 @@
+#!/usr/bin/env node
+
+'use strict';
+
+// ===================
+// Module dependencies
+// ===================
+
+/**
+ * External
+ */
+
 const _ = require('lodash');
 const async = require('async');
-
 const path = require('path');
 const prompt = require('prompt');
 const fs = require('fs');
+
+/**
+ * Internal
+ */
 
 const log = require('../helpers/log-helper');
 const shell = require('../helpers/shell-helper');
@@ -35,7 +50,7 @@ const status = function(callback) {
 
     async.auto({
       branch: function(cb) {
-        getCurrentBranchName(gitDir, projectDir, cb, gOpts);
+        currentBranchName(gitDir, projectDir, cb, gOpts);
       },
       local: function(cb) {
         shell.run(`${G} rev-parse @{0}`, cb, gOpts);
@@ -86,10 +101,10 @@ const status = function(callback) {
       }
     });
   }, function(err) {
-      if (err && callback)
-        callback(err);
-      if (callback)
-        callback();
+    if (err && callback)
+      callback(err);
+    if (callback)
+      callback();
   });
 }
 
@@ -101,14 +116,14 @@ const pull = function(callback) {
 
   async.each(gitProjects, function(project, cb) {
 
-          // Project info
+    // Project info
     let gitDir = path.dirname(project);
     let projectDir = path.resolve(gitDir, '..');
     let projectName = path.basename(projectDir);
 
     async.auto({
       branch: function(cbAuto) {
-        getCurrentBranchName(gitDir, projectDir, cbAuto, { silent: true });
+        currentBranchName(gitDir, projectDir, cbAuto, { silent: true });
       },
       pull_branch: ['branch', function(results, cbAuto) {
         let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
@@ -119,10 +134,10 @@ const pull = function(callback) {
 
 
   }, function(err) {
-      if (err && callback)
-        callback(err);
-      if (callback)
-        callback();
+    if (err && callback)
+      callback(err);
+    if (callback)
+      callback();
   });
 
 }
@@ -202,29 +217,29 @@ const branch = function(name, createIfNotExist) {
 
 }
 
+const projectName = function(project, callback) {
 
-//shell.run(`git --git-dir=${gitDir} remote set-url origin http://bgcldevops/bgp-bel-portal/${projectName}`, function(err, res){}, {log:true});
+  let G = `git --git-dir=${project.gitPath} --work-tree=${project.path}`
 
+  shell.run(`${G} config --local remote.origin.url|sed -n 's#.*/\\([^.]*\\)\\.git#\\1#p'`, callback, { silent: true });
+}
 
-// shell.run(`git --git-dir=${gitDir} push --set-upstream origin liferay_merge`, function(err, res) {
-//     if (!err) {
-//         console.log("Project: ", projectName);
-//     }
-// }, { silent: true });
-
-const getCurrentBranchName = function(gitDir, projectDir, callback, options) {
+const currentBranchName = function(gitDir, projectDir, callback, options) {
   let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
 
   shell.run(`${G} rev-parse --symbolic-full-name --abbrev-ref HEAD`, callback, options);
 }
 
-
-
+// ==============
+// Export
+// ==============
 
 module.exports = {
   branch,
+  currentBranchName,
   status,
   pull,
+  projectName,
   commit,
   run
 }

@@ -1,9 +1,30 @@
+#!/usr/bin/env node
+
+'use strict';
+
+// ===================
+// Module dependencies
+// ===================
+
+/**
+ * External
+ */
+
 const fs = require("fs");
-const log = require('../helpers/log-helper');
 const path = require('path');
+const prompt = require("prompt");
+
+/**
+ * Internal
+ */
+
+const log = require('../helpers/log-helper');
 const shell = require('../helpers/shell-helper');
 const walk = require('../helpers/walk-helper');
-const prompt = require("prompt");
+
+// ==============
+// Tasks
+// ==============
 
 const deploy = function() {
   run('deploy')
@@ -79,6 +100,10 @@ const askForDeployPath = function(callback) {
     }
   });
 }
+
+// ==============
+// Export
+// ==============
 
 module.exports = {
   deploy,

@@ -1,12 +1,36 @@
+#!/usr/bin/env node
+
+'use strict';
+
+// ===================
+// Module dependencies
+// ===================
+
+/**
+ * External
+ */
+
+const ProgressBar = require('ascii-progress');
 const fs = require("fs");
-const log = require('../helpers/log-helper');
 const path = require('path');
+
+/**
+ * Internal
+ */
+
+const log = require('../helpers/log-helper');
 const shell = require('../helpers/shell-helper');
 const walk = require('../helpers/walk-helper');
-const ProgressBar = require('ascii-progress');
+
+// ===================
+// Attributes
+// ===================
 
 const MAX_PARALLEL_TASKS = 3;
 
+// ==============
+// Tasks
+// ==============
 
 const deploy = function(parallel) {
 
@@ -48,6 +72,10 @@ const run = function(command, parallel) {
     })
 
 }
+
+// ==============
+// Export
+// ==============
 
 module.exports = {
     deploy,

@@ -1,11 +1,28 @@
-// ==============
-// Tasks
-// ==============
+#!/usr/bin/env node
+
+'use strict';
+
+// ===================
+// Module dependencies
+// ===================
+
+/**
+ * External
+ */
+
+const prompt = require("prompt");
+const semver = require('semver');
+
+/**
+ * Internal
+ */
 
 const shell = require('../helpers/shell-helper');
 const log = require('../helpers/log-helper');
-const prompt = require("prompt");
-const semver = require('semver');
+
+// ==============
+// Tasks
+// ==============
 
 const update = function() {
   log.title("Updating lessteps...");
@@ -14,7 +31,7 @@ const update = function() {
 
 const checkVersion = function(currentVersion, options, callback) {
 
-  if(options.indexOf('-x') < 0) {
+  if (options.indexOf('-x') < 0) {
     shell.run('npm show lessteps version', function(err, res) {
 
       let latestVersion = res.replace(/(\r\n|\n|\r)/gm, "");
@@ -26,8 +43,7 @@ const checkVersion = function(currentVersion, options, callback) {
       }
 
     }, { silent: true });
-  }
-  else {
+  } else {
     callback();
   }
 }
@@ -50,6 +66,9 @@ const askForUpdate = function(latestVersion) {
   });
 }
 
+// ==============
+// Export
+// ==============
 
 module.exports = {
   checkVersion,
