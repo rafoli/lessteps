@@ -33,24 +33,16 @@ const status = function(callback) {
 
   log.title("Git status...");
 
-  let gitProjects = walk.list(/\.git\/HEAD/g);
+  async.each(walk.gitProjects(), function(project, cbEach) {
 
-  async.each(gitProjects, function(project, cbEach) {
-
-    // Project info
-    let gitDir = path.dirname(project);
-    let projectDir = path.resolve(gitDir, '..');
-    let projectName = path.basename(projectDir);
-
-
-    let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
+    let G = `git --git-dir=${project.gitPath} --work-tree=${project.path}`
 
     // Shell opts
     let gOpts = { silent: true };
 
     async.auto({
       branch: function(cb) {
-        currentBranchName(gitDir, projectDir, cb, gOpts);
+        currentBranchName(project.gitPath, project.path, cb, gOpts);
       },
       local: function(cb) {
         shell.run(`${G} rev-parse @{0}`, cb, gOpts);
@@ -76,7 +68,7 @@ const status = function(callback) {
       else {
 
         let branchName = res.branch.replace(/(\r\n|\n|\r)/gm, "");
-        let title = `(${branchName}) ${projectName.cyan}`;
+        let title = `(${branchName}) ${project.name.cyan}`;
 
         if (res.changesNotStaged.length > 0 || res.changesStaged.length > 0) {
           log.dottedError(title, 'changes to commit');
@@ -112,22 +104,15 @@ const pull = function(callback) {
 
   log.title("Git pull...");
 
-  let gitProjects = walk.list(/\.git\/HEAD/g);
-
-  async.each(gitProjects, function(project, cb) {
-
-    // Project info
-    let gitDir = path.dirname(project);
-    let projectDir = path.resolve(gitDir, '..');
-    let projectName = path.basename(projectDir);
+  async.each(walk.gitProjects(), function(project, cb) {
 
     async.auto({
       branch: function(cbAuto) {
-        currentBranchName(gitDir, projectDir, cbAuto, { silent: true });
+        currentBranchName(project.gitPath, project.path, cbAuto, { silent: true });
       },
       pull_branch: ['branch', function(results, cbAuto) {
-        let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
-        log.info(projectDir);
+        let G = `git --git-dir=${project.gitPath} --work-tree=${project.path}`
+        log.info(project.path);
         shell.run(`${G} pull`, cbAuto, { log: true });
       }]
     }, cb);
@@ -146,19 +131,12 @@ const commit = function(message) {
 
   log.title("Git commit...");
 
-  let gitProjects = walk.list(/\.git\/HEAD/g);
-
-  gitProjects.forEach(function(project) {
-
-    // Project info
-    let gitDir = path.dirname(project);
-    let projectDir = path.resolve(gitDir, '..');
-    let projectName = path.basename(projectDir);
+  walk.gitProjects().forEach(function(project) {
 
     var pattern = /\w{3,5}-\d{1,10} [A-Z]\w*/;
 
     if (pattern.test(message)) {
-      let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
+      let G = `git --git-dir=${project.gitPath} --work-tree=${project.path}`
       shell.run(`${G} commit -m "${message}"`, null, { log: true });
     } else
       log.error("You should use the pattern: [" + pattern + "]. For example [AAA-0000 Commit message]");
@@ -168,18 +146,11 @@ const commit = function(message) {
 
 const run = function(command) {
 
-  log.title("Git - commit...");
+  log.title(`Git - run [${command}]...`);
 
-  let gitProjects = walk.list(/\.git\/HEAD/g);
+  walk.gitProjects().forEach(function(project) {
 
-  gitProjects.forEach(function(project) {
-
-    // Project info
-    let gitDir = path.dirname(project);
-    let projectDir = path.resolve(gitDir, '..');
-    let projectName = path.basename(projectDir);
-
-    let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
+    let G = `git --git-dir=${project.gitPath} --work-tree=${project.path}`
     shell.run(`${G} ${command}`, null, { log: true });
 
   })
@@ -189,18 +160,11 @@ const branch = function(name, createIfNotExist) {
 
   log.title("Git - branch...");
 
-  let gitProjects = walk.list(/\.git\/HEAD/g);
+  walk.gitProjects().forEach(function(project) {
 
-  gitProjects.forEach(function(project) {
+    log.info(project.path);
 
-    // Project info
-    let gitDir = path.dirname(project);
-    let projectDir = path.resolve(gitDir, '..');
-    let projectName = path.basename(projectDir);
-
-    log.info(projectDir);
-
-    let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
+    let G = `git --git-dir=${project.gitPath} --work-tree=${project.path}`
 
     shell.run(`${G} fetch`, null, { log: true });
 
@@ -224,8 +188,8 @@ const projectName = function(project, callback) {
   shell.run(`${G} config --local remote.origin.url|sed -n 's#.*/\\([^.]*\\)\\.git#\\1#p'`, callback, { silent: true });
 }
 
-const currentBranchName = function(gitDir, projectDir, callback, options) {
-  let G = `git --git-dir=${gitDir} --work-tree=${projectDir}`
+const currentBranchName = function(gitPath, projectPath, callback, options) {
+  let G = `git --git-dir=${project.gitPath} --work-tree=${project.path}`
 
   shell.run(`${G} rev-parse --symbolic-full-name --abbrev-ref HEAD`, callback, options);
 }

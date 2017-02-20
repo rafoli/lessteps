@@ -23,34 +23,43 @@ $ les -h
 
   Commands:
 
-    init                      Create Liferay's bundle (default profile - dev)
-    initdb                    Init a DB instance
-    git [options]             Git commands
-      -s, --status            Projects status
-      -p, --pull              Pull projects
-      -c, --commit [message]  Commit projects
-      -b, --branch [name]     Create a new branch
-      -r, --run [command]     Command    
-    gradle [options]          Gradle commands
-      -d, --deploy            Build, Install and Deploy
-      -r, --run [command]     Command
-    test [options]            Git commands
-      -u, --unitTest          Run unitTest
-      -f, --functionalTest    Run functionalTest
-      -s, --sanityTest        Run sanityTest
-      -i, --integrationTest   Run integrationTest
-      -c, --coverage          Run test coverage    
+    init                                Create Liferay's bundle (default profile - dev)
+    initdb                              Init a DB instance
+    update                              Update lessteps     
+    git [options]                       Git commands
+      -s, --status                      Projects status
+      -p, --pull                        Pull projects
+      -c, --commit [message]            Commit projects
+      -b, --branch [name]               Create a new branch
+      -r, --run [command]               Command    
+    gradle [options]                    Gradle commands
+      -d, --deploy                      Build, Install and Deploy
+      -f, --deployParallel              Build, Install and Deploy in Parallel
+      -r, --run [command]               Command
+    test [options]                      Git commands
+      -u, --unitTest                    Run unitTest
+      -f, --functionalTest              Run functionalTest
+      -s, --sanityTest                  Run sanityTest
+      -i, --integrationTest             Run integrationTest
+      -c, --coverage                    Run test coverage     
+    qa [options]                        QA commands (ex.: les qa master,ISSUE-3)
+    mr [options]                        MR commands  
+      -h, --help                        Output usage information
+      -g, --group [group]               Owner username
+      -u, --user [user/assignee]        User/Assigne name
+      -t, --targetBranch [targetBranch] Target branch
+      -m, --message [message]           Message of MR
+      -d, --description [description]   Description of MR
+      -l, --labels [labels]             Labels for MR as a comma-separated list        
 
   Options:
 
-    -h, --help                Output usage information
-    -V, --version             Output the version number
-    -c, --commit [message]    Commit projects
-    -d, --deploy              Deploy projects
-    -p, --pull                Pull projects
-    -b, --branch [name]       Create a new branch
-    -s, --status              Project status
-    -u, --update              Update lessteps
+    -h, --help                          Output usage information
+    -V, --version                       Output the version number
+    -s, --status                        Project status
+    -b, --branch [name]                 Create a new branch
+    -d, --deploy                        Deploy projects
+    -x, ----skipDownload                Skip downloads and checks
 ```
 
 
