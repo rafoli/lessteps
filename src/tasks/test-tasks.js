@@ -61,7 +61,7 @@ const coverage = function() {
 
     let reportFile = `./${project.path}/build/reports/jacoco/test/html/index.html`;
 
-    shell.run(`cd ${project.path} && gradle clean deploy install test jacocoTestReport`, null, { sync: true });
+    shell.run(`cd ${project.path} && gradle deploy install test jacocoTestReport`, null, { sync: true });
 
     let content;
     let value;

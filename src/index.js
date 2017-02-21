@@ -59,7 +59,7 @@ const branchShortcut = function(name) {
 
 // Header
 program
-  .version('0.7.1');
+  .version('0.7.2');
 
 program
   .option('-s, --status', 'Projects status', statusShortcut)
