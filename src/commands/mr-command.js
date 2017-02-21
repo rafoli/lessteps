@@ -38,14 +38,14 @@ const mr = function(options) {
       source_branch: function(cb) {
         gitTasks.currentBranchName(project.gitPath, project.path, cb, {silent:true});
       },
-      add_merge_request: ['project_id', 'user_id', 'source_branch', function(results, cb) {
+      merge_request_id: ['project_id', 'user_id', 'source_branch', function(results, cb) {
       	options.projectId = results.project_id;
       	options.userId = results.user_id;
-      	options.sourceBranch = results.source_branch;
+      	options.sourceBranch = String(results.source_branch).replace(/(\r\n|\n|\r)/gm,"");
         gitlabTasks.addMergeRequest(project, options, cb);
       }],
-      update_merge_request: ['add_merge_request', function(results, cb) {
-      	options.mergeRequestId = results.add_merge_request;
+      update_merge_request: ['merge_request_id', function(results, cb) {
+      	options.mergeRequestId = results.merge_request_id;
         gitlabTasks.updateMergeRequest(project, options, cb);
       }]      
     });

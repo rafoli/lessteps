@@ -189,7 +189,7 @@ const projectName = function(project, callback) {
 }
 
 const currentBranchName = function(gitPath, projectPath, callback, options) {
-  let G = `git --git-dir=${project.gitPath} --work-tree=${project.path}`
+  let G = `git --git-dir=${gitPath} --work-tree=${projectPath}`
 
   shell.run(`${G} rev-parse --symbolic-full-name --abbrev-ref HEAD`, callback, options);
 }

@@ -128,7 +128,7 @@ program
 program
   .command('mr')
   .option('-g, --group [group]', 'Owner username')
-  .option('-u, --user [user/assignee]', 'User/Assigne name')
+  .option('-u, --user [user]', 'User/Assigne name')
   .option('-t, --targetBranch [targetBranch]', 'Target branch')
   .option('-m, --message [message]', 'Message of MR')
   .option('-d, --description [description]', 'Description of MR')
