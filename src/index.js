@@ -20,6 +20,7 @@ const program = require('commander');
 
 // Tasks
 const core = require('./tasks/core-tasks');
+const gradle = require('./tasks/gradle-tasks');
 const git = require('./tasks/git-tasks');
 // Commands
 const initCommand = require('./commands/init-command');
@@ -58,7 +59,7 @@ const branchShortcut = function(name) {
 
 // Header
 program
-  .version('0.7.0');
+  .version('0.7.1');
 
 program
   .option('-s, --status', 'Projects status', statusShortcut)
