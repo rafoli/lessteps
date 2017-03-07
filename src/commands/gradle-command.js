@@ -20,6 +20,9 @@ const gradle = function(options) {
   if (options.deploy)
     gradleTasks.deploy();
 
+  if (options.watch)
+    gradleTasks.watch();
+
   if (options.run) {
     let command = options.run;
     gradleTasks.run(command);
@@ -31,5 +34,5 @@ const gradle = function(options) {
 // ==============
 
 module.exports = {
-    gradle
+  gradle
 }

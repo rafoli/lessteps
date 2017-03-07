@@ -37,6 +37,10 @@ const deploy = function(parallel) {
     run('deploy install', parallel)
 }
 
+const watch = function() {
+    run('deploy -t -x test --offline')
+}
+
 const run = function(command, parallel) {
 
     let gitProjects = walk.list(/\.bnd/);
@@ -79,5 +83,6 @@ const run = function(command, parallel) {
 
 module.exports = {
     deploy,
+    watch,
     run
 }

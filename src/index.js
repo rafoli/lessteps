@@ -40,16 +40,20 @@ const statusShortcut = function() {
   git.status();
 }
 
-const deployShortcut = function() {
-  gradle.deploy();
-}
-
 const pullShortcut = function() {
   git.pull();
 }
 
 const branchShortcut = function(name) {
   git.branch(name, true);
+}
+
+const deployShortcut = function() {
+  gradle.deploy();
+}
+
+const watchShortcut = function() {
+  gradle.watch();
 }
 
 
@@ -59,13 +63,14 @@ const branchShortcut = function(name) {
 
 // Header
 program
-  .version('0.7.2');
+  .version('0.8.0');
 
 program
   .option('-s, --status', 'Projects status', statusShortcut)
   .option('-b, --branch [name]', 'Create a new branch', branchShortcut)
   .option('-d, --deploy', 'Deploy projects', deployShortcut)
   .option('-p, --pull', 'Pull projects', pullShortcut)
+  .option('-w, --eatch', 'Gradle watch', watchShortcut)
   .option('-x, --skipDownload', 'Skip downloads and checks', function(){});
 
 // init
@@ -106,6 +111,7 @@ program
   .option('-d, --deploy', 'Build, Install and Deploy')
   .option('-dp, --deployParallel', 'Build, Install and Deploy in Parallel')
   .option('-r, --run [command]', 'Command')
+  .option('-w, --watch', 'Watch')
   .action(gradleCommand.gradle);
 
 // test
