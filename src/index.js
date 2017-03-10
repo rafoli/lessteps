@@ -63,7 +63,7 @@ const watchShortcut = function() {
 
 // Header
 program
-  .version('0.8.0');
+  .version('0.8.1');
 
 program
   .option('-s, --status', 'Projects status', statusShortcut)
@@ -109,6 +109,7 @@ program
   .command('gradle')
   .description('Gradle commands')
   .option('-d, --deploy', 'Build, Install and Deploy')
+  .option('-, --deploy', 'Build, Install and Deploy')
   .option('-dp, --deployParallel', 'Build, Install and Deploy in Parallel')
   .option('-r, --run [command]', 'Command')
   .option('-w, --watch', 'Watch')

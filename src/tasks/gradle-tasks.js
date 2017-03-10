@@ -34,7 +34,7 @@ const MAX_PARALLEL_TASKS = 3;
 
 const deploy = function(parallel) {
 
-    run('deploy install', parallel)
+    run('clean deploy install', parallel)
 }
 
 const watch = function() {
