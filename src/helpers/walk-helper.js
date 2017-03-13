@@ -139,8 +139,7 @@ const showProjects = function(includes, excludes) {
   _.forEach(includes, function(file) {
     // Project info
     let projectDir = path.dirname(file);
-    let projectName = path.basename(projectDir);
-    log.simpleInfo(projectName);
+    log.simpleInfo(projectDir);
   });
 
   log.error("Excludes:");
