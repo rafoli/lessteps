@@ -33,7 +33,7 @@ const deploy = function() {
 const run = function(command) {
 
 
-  let gitProjects = walk.list(/package\.json/, 'node_modules');
+  let gitProjects = walk.list(/package\.json/, ['node_modules']);
 
   let projects = [];
 

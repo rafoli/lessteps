@@ -59,7 +59,9 @@ const run = function(command, parallel) {
 
         if (!parallel) {
             log.info(projectDir);
-            shell.run(`cd ${projectDir} && gradle ${command}`, null, { sync: true });
+            let inst = `cd ${projectDir} && gradle ${command}`
+            log.simpleInfo(inst);
+            shell.run(inst, null, { sync: true });
         }
         else {
             names.push(projectName);
