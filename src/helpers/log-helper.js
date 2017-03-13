@@ -58,6 +58,10 @@ const simpleInfo = function(text) {
   console.log(text.cyan);
 }
 
+const simpleError = function(text) {
+  text = "    " + text
+  console.log(text.red);
+}
 
 // ==============
 // Export
@@ -70,5 +74,6 @@ module.exports = {
   error,
   dottedInfo,
   dottedError,
-  simpleInfo
+  simpleInfo,
+  simpleError
 }

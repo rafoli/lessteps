@@ -70,7 +70,7 @@ const bundleProjects = function() {
 }
 
 // List based on pattern
-const list = function(pattern, excludes) {
+const list = function(pattern, excludes, opts) {
 
   // Update excludes from lessteps.yaml
   excludes = configureExcludes(excludes);
@@ -81,6 +81,10 @@ const list = function(pattern, excludes) {
   let list = _.filter(filelist, function(o) {
     return (pattern).test(o);
   });
+
+  if (opts && opts.showProjects) {
+    showProjects(list, excludes);
+  }
 
   return list;
 }
@@ -103,8 +107,14 @@ const walkSync = function(dir, filelist, excludes) {
 
     }
   });
+
+
   return filelist;
 };
+
+// ===============
+// Private methods
+// ===============
 
 // Update excludes from lessteps.yaml
 const configureExcludes = function(excludes) {
@@ -113,18 +123,34 @@ const configureExcludes = function(excludes) {
 
   try {
     let config = yaml.safeLoad(fs.readFileSync('./lessteps.yaml', 'utf8'));
-    if (config.excludes)
+    if (config && config.excludes)
       excludes = excludes.concat(config.excludes);
   } catch (e) {
-    if (e.code === 'ENOENT') {}
-    else 
+    if (e.code === 'ENOENT') {} else
       console.log(e);
   }
 
-  if (excludes.length > 0)
-      log.error("Excludes: " + excludes);
-
   return excludes;
+}
+
+// Update excludes from lessteps.yaml
+const showProjects = function(includes, excludes) {
+  log.info("Includes:");
+  _.forEach(includes, function(file) {
+    // Project info
+    let projectDir = path.dirname(file);
+    let projectName = path.basename(projectDir);
+    log.simpleInfo(projectName);
+  });
+
+  log.error("Excludes:");
+  if (excludes.length > 0) {
+    _.forEach(excludes, function(project) {
+      log.simpleError(project);
+    });
+  } else {
+    log.simpleError("[]");
+  }
 }
 
 // ==============

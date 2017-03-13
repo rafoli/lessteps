@@ -43,7 +43,7 @@ const watch = function() {
 
 const run = function(command, parallel) {
 
-    let gitProjects = walk.list(/\.bnd/);
+    let gitProjects = walk.list(/\.bnd/, null, {showProjects:true});
 
     let projects = [];
 
