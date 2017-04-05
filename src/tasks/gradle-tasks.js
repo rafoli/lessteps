@@ -59,13 +59,13 @@ const run = function(command, parallel) {
 
         if (!parallel) {
             log.info(projectDir);
-            let inst = `cd ${projectDir} && gradle ${command}`
+            let inst = `cd ${projectDir} && blade gw ${command}`
             log.simpleInfo(inst);
             shell.run(inst, null, { sync: true });
         }
         else {
             names.push(projectName);
-            commands += `"cd ${projectDir} && gradle ${command}" `;
+            commands += `"cd ${projectDir} && blade gw ${command}" `;
 
             if (names.length == MAX_PARALLEL_TASKS) {
                 let parallelRun = `concurrently --prefix "[{name}]" --names "${names}" ${commands} `; 
