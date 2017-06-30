@@ -113,13 +113,13 @@ const applyPatch = function(patchingToolPath, fixPackPath, cb) {
       } else
         callback();
     },
-    function(callback) {
-      if (fixPackPath) {
-        log.info('Patching-tool: auto-discovery...');
-        shell.run('sh bundles/patching-tool/patching-tool.sh auto-discovery', callback);
-      } else
-        callback();
-    },
+    // function(callback) {
+    //   if (fixPackPath) {
+    //     log.info('Patching-tool: auto-discovery...');
+    //     shell.run('sh bundles/patching-tool/patching-tool.sh auto-discovery', callback);
+    //   } else
+    //     callback();
+    // },
     function(callback) {
       if (fixPackPath) {
         log.info('Patching-tool: install...');

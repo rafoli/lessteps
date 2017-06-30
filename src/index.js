@@ -63,7 +63,7 @@ const watchShortcut = function() {
 
 // Header
 program
-  .version('0.9.3');
+  .version('0.9.5');
 
 program
   .option('-s, --status', 'Projects status', statusShortcut)
