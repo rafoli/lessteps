@@ -10,7 +10,6 @@
  * External
  */
 
-const ProgressBar = require('ascii-progress');
 const fs = require("fs");
 const path = require('path');
 

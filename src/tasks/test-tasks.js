@@ -13,7 +13,6 @@
 const fs = require("fs");
 const cheerio = require("cheerio");
 const path = require('path');
-const ProgressBar = require('ascii-progress');
 
 /**
  * External
@@ -85,15 +84,9 @@ const coverage = function() {
   });
 
   projects.forEach(function(project) {
-    var cyan = '\u001b[46m \u001b[0m';
-    var red = '\u001b[41m \u001b[0m';
 
-    var bar = new ProgressBar({
-      schema: '|:bar.gradient(red,cyan)| :current% => :title [:report] ',
-      width: 20,
-      total: 101
-    });
-    bar.tick(project.coverage, { title: project.name, report: project.coverageReport });
+    console.log(project.name.cyan + ' : ' + project.coverageReport)
+
   })
 
 
