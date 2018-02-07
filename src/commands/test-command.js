@@ -32,6 +32,9 @@ const test = function(options) {
 
   if (options.coverage)
     testTasks.coverage();
+
+  if (options.bddTest)
+    testTasks.bddTest();
 }
 
 // ==============
