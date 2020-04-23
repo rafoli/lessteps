@@ -63,7 +63,7 @@ const watchShortcut = function() {
 
 // Header
 program
-  .version('0.9.7');
+  .version('0.9.10');
 
 program
   .option('-s, --status', 'Projects status', statusShortcut)
@@ -121,6 +121,7 @@ program
   .description('Git commands')
   .option('-u, --unitTest', 'Run unitTest')
   .option('-f, --functionalTest', 'Run functionalTest')
+  .option('-b, --bddTest', 'Run bddTest')
   .option('-s, --sanityTest', 'Run sanityTest')
   .option('-i, --integrationTest', 'Run integrationTest')
   .option('-c, --coverage', 'Run test coverage')

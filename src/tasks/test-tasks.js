@@ -34,6 +34,10 @@ const functionalTest = function() {
   test('functionalTest');
 }
 
+const bddTest = function() {
+  testInBDD('setupCucumberTestWithGoogleChrome cucumberTest');
+}
+
 const sanityTest = function() {
   test('sanityTest');
 }
@@ -48,8 +52,14 @@ const test = function(type) {
   walk.bundleProjects().forEach(function(project) {
     log.info(project.path);
 
-    shell.run(`cd ${project.path} && gradle deploy install ${type}`, null, { sync: true });
+    shell.run(`cd ${project.path} && blade gw deploy ${type}`, null, { sync: true });
   });
+}
+
+const testInBDD = function(type) {
+  log.title(type + "...");
+
+  shell.run(`blade gw deploy ${type}`, null, { sync: true });
 }
 
 const coverage = function() {
@@ -60,7 +70,7 @@ const coverage = function() {
 
     let reportFile = `./${project.path}/build/reports/jacoco/test/html/index.html`;
 
-    shell.run(`cd ${project.path} && gradle deploy install test jacocoTestReport`, null, { sync: true });
+    shell.run(`cd ${project.path} && blade gw deploy test jacocoTestReport`, null, { sync: true });
 
     let content;
     let value;
@@ -99,6 +109,7 @@ const coverage = function() {
 module.exports = {
   unitTest,
   functionalTest,
+  bddTest,
   sanityTest,
   integrationTest,
   coverage
